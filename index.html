@@ -28,6 +28,156 @@ align-items:center;
 justify-content:center;
 }
 
+/* Pradinis gimtadienio pasveikinimo langas */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+  background: rgba(31, 49, 37, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.welcome-modal {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 520px;
+  padding: 38px 28px;
+  border-radius: 28px;
+  background: #FFFCF5;
+  color: #35463A;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+  animation: welcomeAppear 0.7s ease-out both;
+}
+
+.welcome-modal h1 {
+  margin: 0 0 20px;
+  font-size: clamp(27px, 6vw, 38px);
+  line-height: 1.2;
+}
+
+.welcome-modal p {
+  font-size: 18px;
+  line-height: 1.65;
+  margin: 0 0 26px;
+}
+
+.welcome-modal .welcome-cta {
+  border: none;
+  border-radius: 30px;
+  padding: 16px 24px;
+  background: #B8D8B0;
+  color: #35463A;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #91B58A;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.welcome-modal .welcome-cta:hover {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 #91B58A;
+}
+
+.welcome-modal .welcome-cta:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #91B58A;
+}
+
+.welcome-overlay.is-hidden {
+  display: none;
+}
+
+/* Skraidantys balionai */
+.welcome-balloon {
+  position: absolute;
+  bottom: -130px;
+  z-index: 1;
+  font-size: 42px;
+  pointer-events: none;
+  animation: balloonFloat linear infinite;
+}
+
+.welcome-balloon:nth-child(1) {
+  left: 5%;
+  animation-duration: 11s;
+}
+
+.welcome-balloon:nth-child(2) {
+  left: 22%;
+  animation-duration: 14s;
+  animation-delay: 2s;
+}
+
+.welcome-balloon:nth-child(3) {
+  left: 76%;
+  animation-duration: 12s;
+  animation-delay: 1s;
+}
+
+.welcome-balloon:nth-child(4) {
+  left: 91%;
+  animation-duration: 15s;
+  animation-delay: 4s;
+}
+
+.welcome-balloon:nth-child(5) {
+  left: 48%;
+  animation-duration: 13s;
+  animation-delay: 3s;
+}
+
+@keyframes balloonFloat {
+  0% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-60vh) rotate(8deg);
+  }
+  100% {
+    transform: translateY(-125vh) rotate(-8deg);
+  }
+}
+
+@keyframes welcomeAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-modal {
+    padding: 32px 22px;
+  }
+
+  .welcome-modal p {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-balloon {
+    animation: none;
+  }
+
+  .welcome-modal {
+    animation: none;
+  }
+}
+
 /* progress */
 .progress{
 position:fixed;
@@ -203,6 +353,35 @@ top:65%;
 </head>
 
 <body>
+
+
+<!-- Pradinis gimtadienio pasveikinimas -->
+<div class="welcome-overlay" id="welcomeOverlay">
+
+  <span class="welcome-balloon">🎈</span>
+  <span class="welcome-balloon">🎈</span>
+  <span class="welcome-balloon">🎈</span>
+  <span class="welcome-balloon">🎈</span>
+  <span class="welcome-balloon">🎈</span>
+
+  <div class="welcome-modal">
+    <h1>Su gimtadieniu! 💚</h1>
+
+    <p>
+      <strong>Jolanta, šiandien – Tavo diena! 🥂</strong><br>
+      Mėgaukis ja ir priimk visus gražiausius žodžius.
+      O mes Tau paruošėme keletą ypatingų palinkėjimų!
+    </p>
+
+    <button
+      class="welcome-cta"
+      type="button"
+      onclick="enterSite()">
+      MĖGAUTIS LINKĖJIMAIS ✨
+    </button>
+  </div>
+</div>
+
 
 <!-- Fono muzika -->
 <audio id="backgroundMusic" loop preload="auto">
@@ -449,6 +628,16 @@ async function startMusic() {
     musicToggle.setAttribute("aria-label", "Įjungti muziką");
     musicToggle.title = "Įjungti muziką";
   }
+}
+
+function enterSite() {
+  const welcome = document.getElementById("welcomeOverlay");
+
+  // Paslepiame pasveikinimą
+  welcome.classList.add("is-hidden");
+
+  // Paleidžiame muziką paspaudus mygtuką
+  startMusic();
 }
 
 function stopMusic() {
