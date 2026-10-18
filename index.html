@@ -204,6 +204,22 @@ top:65%;
 
 <body>
 
+<!-- Fono muzika -->
+<audio id="backgroundMusic" loop preload="auto">
+  <source src="Jolantele - Gimtadienis.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Muzikos įjungimo / išjungimo ikonėlė -->
+<button id="musicToggle" type="button"
+  aria-label="Įjungti muziką"
+  title="Įjungti muziką"
+  style="position:fixed; top:18px; right:18px; z-index:9999;
+  width:44px; height:44px; border:none; border-radius:50%;
+  background:#FFFCF5; color:#35463A; font-size:21px;
+  cursor:pointer; box-shadow:0 2px 10px #0002;">
+  ♫
+</button>
+
 <div class="progress"><div class="bar" id="bar"></div></div>
 
 <!-- 0 INTRO -->
@@ -415,6 +431,47 @@ step = scenes.length - 1;
 update();
 }, 8000);
 }
+
+const backgroundMusic = document.getElementById("backgroundMusic");
+const musicToggle = document.getElementById("musicToggle");
+
+let musicStarted = false;
+
+async function startMusic() {
+  try {
+    await backgroundMusic.play();
+    musicStarted = true;
+    musicToggle.textContent = "♫";
+    musicToggle.setAttribute("aria-label", "Išjungti muziką");
+    musicToggle.title = "Išjungti muziką";
+  } catch (error) {
+    musicToggle.textContent = "♪";
+    musicToggle.setAttribute("aria-label", "Įjungti muziką");
+    musicToggle.title = "Įjungti muziką";
+  }
+}
+
+function stopMusic() {
+  backgroundMusic.pause();
+  musicToggle.textContent = "♪";
+  musicToggle.setAttribute("aria-label", "Įjungti muziką");
+  musicToggle.title = "Įjungti muziką";
+}
+
+musicToggle.addEventListener("click", async () => {
+  if (backgroundMusic.paused) {
+    await startMusic();
+  } else {
+    stopMusic();
+  }
+});
+
+// Pirmas paspaudimas puslapyje paleidžia muziką
+document.addEventListener("click", function startOnFirstClick() {
+  if (!musicStarted && backgroundMusic.paused) {
+    startMusic();
+  }
+}, { once: true });
 
 /* FINAL NO BUTTON */
 const noBtn = document.getElementById("noBtn");
